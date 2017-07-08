@@ -1,21 +1,23 @@
 body {
   margin: 0;
-  overflow:hidden;
-  font-size:50px ;
+  overflow: hidden;
+  font-size: 50px;
 }
 
-
-table{
-  width:100%;
+table {
+  width: 100%;
 }
-td{
+
+td {
   padding: 40px;
-  font-size:50px;
+  font-size: 50px;
 }
-tbody{
-  font-weight:bold;
+
+tbody {
+  font-weight: bold;
 }
-input{
-  font-size:50px ;
-  width:300px;
+
+input {
+  font-size: 50px;
+  width: 300px;
 }
