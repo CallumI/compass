@@ -1,0 +1,29 @@
+﻿<html manifest="compass.appcache">
+  <head>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="compass.json">
+    <meta name="viewport" content="width=device-width, initial-scale=0.01, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="compass.css" />
+  </head>
+  <body>
+    <div id="input" style="height:200px;">
+      Name: <input type="text" id="nameIN"></input></br>
+      Latitude: <input type="text" id="latIN"></input>
+      Longitude: <input type="text" id="lonIN"></input>
+      <input type="button" value="here" id="myLocationIN"></input>
+      <input type="button" value="go" id="goIN"></input>
+    </div>
+
+    <canvas id="canvas" ></canvas>
+    <div id="sel" style="overflow:scroll;height:30%;">
+      <table id="table">
+
+
+      </table>
+    </div>
+
+    <script src="compass.js">
+    </script>
+  </body>
+</html>

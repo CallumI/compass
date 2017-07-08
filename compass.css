@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  overflow:hidden;
+  font-size:50px ;
+}
+
+
+table{
+  width:100%;
+}
+td{
+  padding: 40px;
+  font-size:50px;
+}
+tbody{
+  font-weight:bold;
+}
+input{
+  font-size:50px ;
+  width:300px;
+}

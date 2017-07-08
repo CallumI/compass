@@ -1,0 +1,12 @@
+﻿{
+  "short_name": "IR Compass",
+  "name": "Interrail Compass",
+  "icons": [{
+        "src": "AND.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+  ],
+  "display": "fullscreen",
+  "orientation":"portrait"
+}
