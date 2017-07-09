@@ -93,6 +93,7 @@ var compass_svg_circle = compass_svg_group.append("svg:circle")
 function updatePointers() {
   // See here https://bl.ocks.org/mbostock/3808218
   // for d3 v4 data joins.
+  // First setup the compass
   var compass_pointers = compass_svg_group.selectAll(".pointer")
     .data(places.filter(d => d[3]));
   // only applied to old elements
@@ -118,31 +119,43 @@ function updatePointers() {
       updateSelectedPlace(d);
       d3.event.stopPropagation();
     });
+  compass_pointers.exit().remove();
 
-    var listElements = d3.select(".mdl-list").selectAll("li")
-      .data(places);
-    listElements.enter().append("li")  // Applied to new
-      .attr("class", "mdl-list__item mdl-list__item--three-line");
-
-    listElements.merge(listElements)  // Applied to new + old
-      .html((d, i) =>
-      '<span class="mdl-list__item-primary-content">'+
-        '<i class="material-icons mdl-list__item-avatar">pin_drop</i>'+
-        '<span>' + d[2] + '</span>' +
-        '<span class="mdl-list__item-text-body">' +
-        Math.round(getDistance(coords, d)) +
-        'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 2) + ')' +
-        '</span>' +
-      '</span>' +
-      '<span class="mdl-list__item-secondary-content">' +
-        '<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-' + i + '">' +
-          '<input type="checkbox" id="switch-' + i + '" class="mdl-switch__input" checked>' +
-        '</label> ' +
-      '</span>');
-
-  compass_pointers.exit().remove(); // Remove redundant elements.s
-
-
+  // Now setup the table
+  var listElements = d3.select(".mdl-list").selectAll("li")
+    .data(places);
+  liEnter = listElements.enter().append("li")  // Create list element
+    .attr("class", "mdl-list__item mdl-list__item--three-line");
+    //.text(d => JSON.stringify(d));
+  primaryContent = liEnter.append("span")  // Create span for pimary content
+    .attr("class", "mdl-list__item-primary-content");
+  primaryContent.append("i")  // Create avatar in primary content
+    .attr("class", "material-icons mdl-list__item-avatar")
+    .text("pin_drop");
+  primaryContent.append("span");  // Add the place's title
+  primaryContent.append("span")  // Add the place's text body
+    .attr("class", "mdl-list__item-text-body");
+  liEnter.append("span")  // Create secondary content
+    .attr("class", "mdl-list__item-secondary-content")
+    .append("label")
+      .attr("class", "mdl-switch mdl-js-switch mdl-js-ripple-effect")
+        .append("input")
+          .attr("type", "checkbox")
+          .attr("class", "mdl-switch__input");
+  liMerge = listElements.merge(listElements);
+  // Update the data in the elements
+  primaryContent = liMerge.select(".mdl-list__item-primary-content");
+  primaryContent.select("span").text(d => d[2]);  // Populate the title
+  primaryContent.select(".mdl-list__item-text-body")  // Populate info
+    .text(d => "" + rdp(getDistance(coords, d), 0) +
+          'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 3) + ')');
+  liMerge.select(".mdl-list__item-secondary-content") // Secondary content
+    .select("label")  // Add label 'for'
+      .attr("for", (d, i) => "switch-" + i)
+      .select("input")
+        .attr("id", (d, i) => "switch-" + i)
+        .attr("checked", (d) => d[3]);
+  listElements.exit().remove();
 }
 
 /*
