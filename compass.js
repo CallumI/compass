@@ -50,6 +50,13 @@ function r2d(radian) {
   return radian * 180 / (Math.PI);
 }
 
+// Returns the string of a number rounded to the given number of
+// decimalPlaces.
+function rdp(num, decimalPlaces){
+  let shift = Math.pow(10, decimalPlaces);
+  return "" + Math.round(num * shift) / shift;
+}
+
 // Create an outer svg element within the container .chart element.
 var vis = d3.selectAll(".chart")
   .append("svg:svg")
@@ -111,6 +118,27 @@ function updatePointers() {
       updateSelectedPlace(d);
       d3.event.stopPropagation();
     });
+
+    var listElements = d3.select(".mdl-list").selectAll("li")
+      .data(places);
+    listElements.enter().append("li")  // Applied to new
+      .attr("class", "mdl-list__item mdl-list__item--three-line");
+
+    listElements.merge(listElements)  // Applied to new + old
+      .html((d, i) =>
+      '<span class="mdl-list__item-primary-content">'+
+        '<i class="material-icons mdl-list__item-avatar">pin_drop</i>'+
+        '<span>' + d[2] + '</span>' +
+        '<span class="mdl-list__item-text-body">' +
+        Math.round(getDistance(coords, d)) +
+        'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 2) + ')' +
+        '</span>' +
+      '</span>' +
+      '<span class="mdl-list__item-secondary-content">' +
+        '<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-' + i + '">' +
+          '<input type="checkbox" id="switch-' + i + '" class="mdl-switch__input" checked>' +
+        '</label> ' +
+      '</span>');
 
   compass_pointers.exit().remove(); // Remove redundant elements.s
 
