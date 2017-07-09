@@ -272,6 +272,7 @@ for(let floatingButton of document.querySelectorAll(".main-button")){
 var wpid = navigator.geolocation.watchPosition(
   function(position) { // On successful return store the position.
     coords = [position.coords.latitude, position.coords.longitude];
+    updatePointers();
   },
   function() { // On failure log no connection
     setTimeout(function() {
@@ -296,5 +297,6 @@ window.addEventListener('deviceorientationabsolute', function(e) {
   if (!e.absolute) {
     alert("absolute error");
   }
+  updatePointers();
 
 }, false);
