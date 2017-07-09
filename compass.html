@@ -1,23 +1,69 @@
-﻿<html manifest="compass.appcache">
-  <head>
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="compass.json">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="compass.css" />
-    <script src="https://d3js.org/d3.v4.min.js"></script>
-  </head>
-  <body>
-    <div class="chart"></div>
-    <div hidden id="sel" style="overflow:scroll;height:30%;">
-      <table id="table">
+<html manifest="compass.appcache">
 
+<head>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="compass.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="compass.css" />
+  <script src="d3/d3.v4.min.js"></script>
+  <link rel="stylesheet" href="mdl/material.pink-cyan.min.css">
+  <script defer src="mdl/material.min.js"></script>
+</head>
 
-      </table>
+<body>
+  <div class="page-container">
+    <div class="chart page page-displayed page-ontop page-move-in">
+      <!-- Colored FAB button with ripple -->
+      <button class="main-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">list</i>
+                  </button>
     </div>
+    <div class="data page">
+      <ul class="demo-list-three mdl-list">
+        <li class="mdl-list__item mdl-list__item--three-line">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-avatar">pin_drop</i>
+            <span>Bryan Cranston</span>
+            <span class="mdl-list__item-text-body">123412m | (51.1234132, 0.12321)</span>
+          </span>
+          <span class="mdl-list__item-secondary-content">
+            <a class="mdl-list__item-secondary-action" href="#">
+              <i class="material-icons">star</i>
+            </a>
+          </span>
+        </li>
+        <li class="mdl-list__item mdl-list__item--three-line">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-avatar">pin_drop</i>
+            <span>Bryan Cranston</span>
+            <span class="mdl-list__item-text-body">123412m | (51.1234132, 0.12321)</span>
+          </span>
+          <span class="mdl-list__item-secondary-content">
+            <a class="mdl-list__item-secondary-action" href="#">
+              <i class="material-icons">star</i>
+            </a>
+          </span>
+        </li>
+        <li class="mdl-list__item mdl-list__item--three-line">
+          <span class="mdl-list__item-primary-content">
+            <i class="material-icons mdl-list__item-avatar">pin_drop</i>
+            <span>Bryan Cranston</span>
+            <span class="mdl-list__item-text-body">123412m | (51.1234132, 0.12321)</span>
+          </span>
+          <span class="mdl-list__item-secondary-content">
+            <a class="mdl-list__item-secondary-action" href="#">
+              <i class="material-icons">star</i>
+            </a>
+          </span>
+        </li>
+      </ul>
+      <button class="main-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                    <i class="material-icons">navigation</i>
+                  </button>
+    </div>
+  </div>
+  <script src="compass.js"></script>
+</body>
 
-    <script src="compass.js">
-    </script>
-  </body>
 </html>

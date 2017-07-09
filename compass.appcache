@@ -7,6 +7,13 @@ compass.js
 compass.css
 favicon.ico
 AND.png
+mdl/material.pink-cyan.min.css
+mdl/material.min.js
+d3/d3.v4.min.js
+fonts/MaterialIcons-Regular.eot
+fonts/MaterialIcons-Regular.ttf
+fonts/MaterialIcons-Regular.woff
+fonts/MaterialIcons-Regular.woff2
 
 
 #v1.0.11

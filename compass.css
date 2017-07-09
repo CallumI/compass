@@ -5,28 +5,100 @@ body {
   font-family: 'Roboto', serif;
 }
 
-table {
-  width: 100%;
-}
 
-td {
-  padding: 40px;
-  font-size: 50px;
-}
 
-tbody {
-  font-weight: bold;
-}
 
-input {
-  font-size: 50px;
-  width: 300px;
-}
-
+/* The containing chart */
 .chart {
   background-color: #9E9E9E;
 }
 
+/* The distance in the middle of the compass */
 .distance {
   font-size: x-large;
+}
+
+/* The main button in the corner of each page */
+.main-button.mdl-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  z-index: 999;
+}
+
+/* PAGE ANIMATION */
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.page-displayed {
+  visibility: visible;
+}
+
+.page-ontop {
+  z-index: 998;
+}
+
+.page-move-in {
+  animation: in .3s ease both;
+
+}
+/*
+ * Animation to slide in from the right hand side of the page.
+ */
+@keyframes in {
+  from {
+    margin-top: 0%;
+    transform: translateX(-100%);
+  }
+}
+
+
+
+
+/* GOOGLE FONT SUPPORT - SELF HOSTED */
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(fonts/MaterialIcons-Regular.woff2) format('woff2'),
+    url(fonts/MaterialIcons-Regular.woff) format('woff'),
+    url(fonts/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }

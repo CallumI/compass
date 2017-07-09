@@ -184,6 +184,26 @@ function savePlaces() {
 }
 
 /*
+ * Event called when the floating button is clicked. This removes the current
+ * displayed page and moves to the new page.
+ */
+function floatingButtonClick(e) {
+  const classes = ["page-displayed", "page-ontop", "page-move-in"];
+  currentPage = e.srcElement.parentElement.parentElement;
+  currentPage.classList.remove(...classes);
+  for(let aPage of document.querySelectorAll(".page")){
+    if(aPage != currentPage){
+      aPage.classList.add(...classes);
+    }
+  }
+}
+
+// Assign floatingButtonClick() as a callback to both floating buttons
+for(let floatingButton of document.querySelectorAll(".main-button")){
+  floatingButton.onclick = floatingButtonClick;
+}
+
+/*
  * Register to watch the GPS position.
  */
 var wpid = navigator.geolocation.watchPosition(
