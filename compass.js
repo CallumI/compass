@@ -102,7 +102,7 @@ function updatePointers() {
       .attr("class", "pointer")
     .merge(compass_pointers)
       // Within the merge, this is applied to new + old elements
-      .attr("transform", d => "rotate(" + getBearing(coords, d) + ") " +
+      .attr("transform", d => "rotate(" + (alpha + getBearing(coords, d)) + ") " +
         "translate(0, -" + compass_radius + ")")
       .attr("fill", (d, i) => clrList[i])
       .attr("r", d => d == selectedPlace ? 20 : 15)
