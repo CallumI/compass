@@ -6,7 +6,10 @@ body {
 }
 
 
-
+.data-table{
+  max-height: 100%;
+  overflow: scroll;
+}
 
 /* The containing chart */
 .chart {
