@@ -2,6 +2,7 @@ body {
   margin: 0;
   overflow: hidden;
   font-size: 50px;
+  font-family: 'Roboto', serif;
 }
 
 table {
@@ -20,4 +21,12 @@ tbody {
 input {
   font-size: 50px;
   width: 300px;
+}
+
+.chart {
+  background-color: #9E9E9E;
+}
+
+.distance {
+  font-size: x-large;
 }

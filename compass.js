@@ -1,9 +1,19 @@
-canvas.width = innerWidth;
-canvas.height = innerHeight * 6 / 10;
-minDimension = Math.min(canvas.width, canvas.height);
-var ctx = canvas.getContext("2d");
+/* jshint esversion: 6 */
+
+// The minimum screen dimension
+min_dimension = Math.min(innerWidth, innerHeight);
+// The margin between the compass and the edge
+compass_margin_general = 50;
+// The margins to center the compass in the max_dimension (the min should be 0)
+compass_margin_x = (innerWidth - min_dimension) / 2;
+compass_margin_y = (innerHeight - min_dimension) / 2;
+// The size of the compass
+compass_diameter = min_dimension - compass_margin_general * 2;
+compass_radius = compass_diameter / 2;
+
+// Store the data from the two sensors here.
 var alpha = 0;
-var coords = 0;
+var coords = [51.476798, -0.966547];
 
 // A list of colours to use to highlight the colours.
 var clrList = [
@@ -11,132 +21,126 @@ var clrList = [
   "pink", "brown", "cyan"
 ];
 
+
+// The main colours for the UI
+var primaryColour = "#9E9E9E"; // Grey
+var secondaryColour = "#00BCD4"; // Cyan
+
 // An array of places to show on the compass.
 // Each entry should be
-// [lat (Number), lon (Number), name (String), selected (Bool)]
+// [lat (Number), lon (Number), name (String), enabled (Bool)]
 var places = [
   [90, 0, "North", true],
-  [51.492344, -0.147978, "London Coach Station", false],
-  [52.363710, 4.888239, "Hans Brinker", false],
+  [51.492344, -0.147978, "London Coach Station", true],
+  [52.363710, 4.888239, "Hans Brinker", true],
   [52.378820, 4.897783, "Amsterdam Station", false],
 ];
-
+var selectedPlace = null; // Stores the place above that is show in the middle
+// Load places from local storage. (Or create local storage).
 loadPlaces();
 
-window.addEventListener('deviceorientationabsolute', orientHandler, false);
 
+// Return the radians of degrees.
 function d2r(degrees) {
   return (degrees / 180) * Math.PI;
 }
 
+// Return the degress of radians.
 function r2d(radian) {
   return radian * 180 / (Math.PI);
 }
 
-function orientHandler(e) {
-  if (e.alpha == null && e.beta == null && e.gamma == null) {
-    console.log("No orientation");
-    return;
-  }
-  alpha = e.alpha;
-  if (!e.absolute) {
-    alert("absolute error");
-  };
+// Create an outer svg element within the container .chart element.
+var vis = d3.selectAll(".chart")
+  .append("svg:svg")
+  .attr("width", innerWidth)
+  .attr("height", innerHeight);
 
-}
-draw(canvas.width / 2, canvas.height / 2, minDimension * 0.45);
+// Create the compass svg group.
+var compass_svg_group = vis.append("svg:g")
+  .attr("transform",
+    "translate(" +
+    (compass_radius + compass_margin_general + compass_margin_x) + "," +
+    (compass_radius + compass_margin_general + compass_margin_y) + ")")
+  .on("click", () => updateSelectedPlace(null));
 
-
-function drawArrowBetter(cX, cY, r, bearing, clr, txt1, txt2) {
-  ctx.beginPath();
-  var TEXT_HEIGHT = 40;
-  ctx.font = TEXT_HEIGHT + "px sans-serif";
-  //var RADIUS = Math.max(Math.max(ctx.measureText(txt2).width/2,TEXT_HEIGHT),ctx.measureText(txt1).width/2)+30;
-  var RADIUS = Math.max(ctx.measureText(txt2).width / 2, TEXT_HEIGHT) + 20;
-  ctx.translate(cX, cY);
-  ctx.rotate(d2r(alpha + bearing));
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, -(r / 2 - RADIUS));
-  ctx.moveTo(0, -(r / 2 + RADIUS));
-  ctx.lineTo(0, -(r));
-  ctx.strokeStyle = clr;
-  ctx.lineWidth = 10;
-  ctx.stroke();
-
-  ctx.fillStyle = "#000";
-  if (txt1 == "North") {
-    ctx.fillText("N", -ctx.measureText("N").width / 2, -(r / 2) + TEXT_HEIGHT / 2);
-  }
-  ctx.fillText(txt2, -ctx.measureText(txt2).width / 2, -(r / 2 - TEXT_HEIGHT / 2));
-
-  ctx.beginPath();
-  ctx.arc(0, -(r / 2), RADIUS, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-}
-
-function drawTable() {
-  table.innerHTML = "<tr><td>Name</td><td>Latitude</td><td>Longitude</td></tr>";
-  var count = 0;
-  for (var i = 0; i < places.length; i++) {
-    var tr = document.createElement("tr");
-    //  var td1 = document.createElement("td");
-    var td2 = document.createElement("td");
-    var td3 = document.createElement("td");
-    var td4 = document.createElement("td");
-    td2.innerText = places[i][2];
-    td3.innerText = places[i][0];
-    td4.innerText = places[i][1];
-    //  tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-    if (places[i][3] == true) {
-      tr.style.backgroundColor = clrList[count % clrList.length];
-      count++;
-    }
-    tr.setAttribute("number", i);
-    tr.onclick = function(e) {
-      var number = parseInt(this.getAttribute("number"), 10);
-      places[number][3] = !places[number][3];
-      savePlaces();
-    }
-    table.appendChild(tr);
-  }
-}
-
-function draw(cX, cY, r) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "rgb(120,120,120)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.beginPath();
-  ctx.arc(cX, cY, r, 0, Math.PI * 2);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
-  var count = 0;
-  for (var i = 0; i < places.length; i++) {
-    if (places[i][3] == true) {
-      if (i == 0) {
-        drawArrowBetter(cX, cY, r, getBearing(coords, places[i]), clrList[0], places[i][2], "");
-
-      } else {
-        drawArrowBetter(cX, cY, r, getBearing(coords, places[i]), clrList[count % clrList.length], places[i][2], Math.round(getDistance(coords, places[i])) + "m");
-      }
-      count++;
-    }
-  }
-  //ctx.fillText(alpha,cX,cY);
-  ctx.strokeStyle = "black";
-  ctx.beginPath();
-  ctx.arc(cX, cY, r, 0, Math.PI * 2);
-  ctx.stroke();
-  drawTable();
-  requestAnimationFrame(function() {
-    draw(cX, cY, r);
+// Make outercircle
+var compass_svg_circle = compass_svg_group.append("svg:circle")
+  .attr("r", 0)
+  .attr("fill", "white")
+  .attr("class", "clock outercircle")
+  .transition()
+  .duration(250)
+  .attr("r", compass_radius)
+  .on("end", () => {
+    // Add the pointers
+    updatePointers();
+    updateSelectedPlace();
   });
+
+
+/*
+ * Update the position of the pointers after a change in position or
+ * orientation.
+ */
+function updatePointers() {
+  // See here https://bl.ocks.org/mbostock/3808218
+  // for d3 v4 data joins.
+  var compass_pointers = compass_svg_group.selectAll(".pointer")
+    .data(places.filter(d => d[3]));
+  // only applied to old elements
+  compass_pointers.transition()
+    .duration(200)
+    .attr("r", d => d == selectedPlace ? 20 : 15);
+  compass_pointers.enter().append("svg:circle")
+    // only applied to new elements
+    .attr("class", "pointer")
+    .attr("r", 0)
+    .transition()
+    .duration(() => Math.random() * 250)
+    .attr("r", 40 + Math.random() * 40)
+    .transition()
+    .duration(() => Math.random() * 250)
+    .attr("r", d => d == selectedPlace ? 20 : 15);
+  compass_pointers.merge(compass_pointers)
+    // Within the merge, this is applied to new + old elements
+    .attr("transform", d => "rotate(" + getBearing(coords, d) + ") " +
+      "translate(0, -" + compass_radius + ")")
+    .attr("fill", (d, i) => clrList[i])
+    .on("click", d => {
+      updateSelectedPlace(d);
+      d3.event.stopPropagation();
+    });
+
+  compass_pointers.exit().remove(); // Remove redundant elements.s
+
+
 }
 
+/*
+ * Change selected place to the argument. The argument should be a member of
+ * places.
+ * The selected place is the one which is displayed in the centre and
+ * highlighted by being made bigger.
+ */
+function updateSelectedPlace(newOne) {
+  selectedPlace = newOne;
+  updatePointers(); // Because selected one changes size!
+  var compass_svg_title = compass_svg_group.selectAll(".distance")
+    .data(selectedPlace ? [selectedPlace] : []);
+  compass_svg_title.enter().append("svg:text")
+    .attr("text-anchor", "middle")
+    .attr("class", "distance")
+    .merge(compass_svg_title)
+    .text(d => "" + Math.round(getDistance(coords, d)), "m");
+  compass_svg_title.exit().remove();
+}
+
+
+/*
+ * Return the distance between end and start.
+ * Takes positions in form [lat, lon]
+ */
 function getDistance(start, end) {
   var R = 6371 * 1000;
   var lat1 = d2r(start[0]);
@@ -148,6 +152,11 @@ function getDistance(start, end) {
   return R * c;
 }
 
+/*
+ * Return the bearing for end from start.
+ * Both should be passed as [lat, lon] tuples.
+ * Returns in degrees.
+ */
 function getBearing(start, end) { //lat,lon
   var dLon = end[1] - start[1];
   var y = Math.sin(d2r(dLon)) * Math.cos(d2r(end[0]));
@@ -155,30 +164,9 @@ function getBearing(start, end) { //lat,lon
   return r2d(Math.atan2(y, x));
 }
 
-
-function geoSuccess(position) {
-  coords = [position.coords.latitude, position.coords.longitude];
-}
-
-function geoError() {
-  setTimeout(function() {
-    if (coords == 0) {
-      alert("Sorry cannot use GPS for some reason!");
-    }
-  }, 6000);
-}
-
-goIN.onclick = function() {
-  var arr = [latIN.value, lonIN.value, nameIN.value, true];
-  places[places.length] = arr;
-  savePlaces();
-}
-
-myLocationIN.onclick = function() {
-  latIN.value = coords[0];
-  lonIN.value = coords[1];
-}
-
+/*
+ * Create the local storage if it doesn't exist, else load from it.
+ */
 function loadPlaces() {
   if (localStorage.save == undefined) {
     savePlaces();
@@ -186,15 +174,44 @@ function loadPlaces() {
   places = JSON.parse(localStorage.save);
 }
 
+
+/*
+ * Save to the local storage.
+ */
 function savePlaces() {
   var str = JSON.stringify(places);
   localStorage.save = str;
 }
 
-var geoOptions = {
-  enableHighAccuracy: true,
-  maximumAge: 0,
-  timeout: 1000
-};
+/*
+ * Register to watch the GPS position.
+ */
+var wpid = navigator.geolocation.watchPosition(
+  function(position) { // On successful return store the position.
+    coords = [position.coords.latitude, position.coords.longitude];
+  },
+  function() { // On failure log no connection
+    setTimeout(function() {
+      if (coords == 0) {
+        console.log("Sorry cannot use GPS for some reason!");
+      }
+    }, 6000);
+  }, { // Options...
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 1000
+  });
 
-var wpid = navigator.geolocation.watchPosition(geoSuccess, geoError, geoOptions);
+// Register listener for orientation.
+window.addEventListener('deviceorientationabsolute', function(e) {
+  if (e.alpha == null && e.beta == null && e.gamma == null) {
+    console.log("No orientation");
+    return;
+  }
+  alpha = e.alpha;
+  // Absolute error means that this device doesn't associate alpha with north.
+  if (!e.absolute) {
+    alert("absolute error");
+  }
+
+}, false);
