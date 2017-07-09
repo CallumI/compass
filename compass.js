@@ -47,16 +47,6 @@ function orientHandler(e) {
 draw(canvas.width / 2, canvas.height / 2, minDimension * 0.45);
 
 
-function drawArrow(cX, cY, r, bearing, clr, txt) {
-  ctx.beginPath();
-  ctx.moveTo(cX, cY);
-  ctx.lineTo(cX + r * Math.sin(d2r(alpha + bearing)), cY - r * Math.cos(d2r(alpha + bearing)));
-  ctx.strokeStyle = clr;
-  ctx.lineWidth = 10;
-  ctx.stroke();
-  ctx.fillText(txt, cX + (r + 10) * Math.sin(d2r(alpha + bearing)), cY - (r + 10) * Math.cos(d2r(alpha + bearing)));
-}
-
 function drawArrowBetter(cX, cY, r, bearing, clr, txt1, txt2) {
   ctx.beginPath();
   var TEXT_HEIGHT = 40;
@@ -120,7 +110,6 @@ function draw(cX, cY, r) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "rgb(120,120,120)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  //drawArrow(cX,cY,r,0,"red");
   ctx.beginPath();
   ctx.arc(cX, cY, r, 0, Math.PI * 2);
   ctx.fillStyle = "#fff";
