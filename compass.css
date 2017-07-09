@@ -11,6 +11,15 @@ body {
   overflow: scroll;
 }
 
+.selected-place-card{
+  background-color: white;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
 /* The containing chart */
 .chart {
   background-color: #9E9E9E;

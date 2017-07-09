@@ -73,17 +73,17 @@ var compass_svg_group = vis.append("svg:g")
 
 // Make outercircle
 var compass_svg_circle = compass_svg_group.append("svg:circle")
-  .attr("r", 0)
-  .attr("fill", "white")
-  .attr("class", "clock outercircle")
+    .attr("r", 0)
+    .attr("fill", "white")
+    .attr("class", "clock outercircle")
   .transition()
-  .duration(250)
-  .attr("r", compass_radius)
-  .on("end", () => {
-    // Add the pointers
-    updatePointers();
-    updateSelectedPlace();
-  });
+    .duration(250)
+    .attr("r", compass_radius)
+    .on("end", () => {
+      // Add the pointers
+      updatePointers();
+      updateSelectedPlace();
+    });
 
 
 /*
@@ -96,67 +96,80 @@ function updatePointers() {
   // First setup the compass
   var compass_pointers = compass_svg_group.selectAll(".pointer")
     .data(places.filter(d => d[3]));
-  // only applied to old elements
-  compass_pointers.transition()
-    .duration(200)
-    .attr("r", d => d == selectedPlace ? 20 : 15);
-  compass_pointers.enter().append("svg:circle")
-    // only applied to new elements
-    .attr("class", "pointer")
-    .attr("r", 0)
-    .transition()
-    .duration(() => Math.random() * 250)
-    .attr("r", 40 + Math.random() * 40)
-    .transition()
-    .duration(() => Math.random() * 250)
-    .attr("r", d => d == selectedPlace ? 20 : 15);
-  compass_pointers.merge(compass_pointers)
-    // Within the merge, this is applied to new + old elements
-    .attr("transform", d => "rotate(" + getBearing(coords, d) + ") " +
-      "translate(0, -" + compass_radius + ")")
-    .attr("fill", (d, i) => clrList[i])
-    .on("click", d => {
-      updateSelectedPlace(d);
-      d3.event.stopPropagation();
-    });
   compass_pointers.exit().remove();
+  cEnter = compass_pointers.enter().append("svg:circle")
+      // only applied to new elements
+      .attr("class", "pointer")
+    .merge(compass_pointers)
+      // Within the merge, this is applied to new + old elements
+      .attr("transform", d => "rotate(" + getBearing(coords, d) + ") " +
+        "translate(0, -" + compass_radius + ")")
+      .attr("fill", (d, i) => clrList[i])
+      .attr("r", d => d == selectedPlace ? 20 : 15)
+      .on("click", d => {
+        updateSelectedPlace(d);
+        d3.event.stopPropagation();
+      });
+
 
   // Now setup the table
-  var listElements = d3.select(".mdl-list").selectAll("li")
+  var listElements = d3.select(".data-table").selectAll("li")
     .data(places);
-  liEnter = listElements.enter().append("li")  // Create list element
-    .attr("class", "mdl-list__item mdl-list__item--three-line");
-    //.text(d => JSON.stringify(d));
-  primaryContent = liEnter.append("span")  // Create span for pimary content
-    .attr("class", "mdl-list__item-primary-content");
-  primaryContent.append("i")  // Create avatar in primary content
-    .attr("class", "material-icons mdl-list__item-avatar")
-    .text("pin_drop");
-  primaryContent.append("span");  // Add the place's title
-  primaryContent.append("span")  // Add the place's text body
-    .attr("class", "mdl-list__item-text-body");
-  liEnter.append("span")  // Create secondary content
-    .attr("class", "mdl-list__item-secondary-content")
-    .append("label")
-      .attr("class", "mdl-switch mdl-js-switch mdl-js-ripple-effect")
-        .append("input")
-          .attr("type", "checkbox")
-          .attr("class", "mdl-switch__input");
-  liMerge = listElements.merge(listElements);
+  // Create the new elements
+  liEnter = listElements.enter();
+  createCard(liEnter);
+  // Populate the new + existing elements
+  updateCard(liEnter.merge(listElements));
+  // Remove the old elements
+  listElements.exit().remove();
+}
+
+/* Given an enter with data attached to it, this function will create the
+ * card */
+function createCard(enter){
+   liEnter = enter.append("li")  // Create list element
+     .attr("class", "mdl-list__item mdl-list__item--three-line");
+     //.text(d => JSON.stringify(d));
+   primaryContent = liEnter.append("span")  // Create span for pimary content
+     .attr("class", "mdl-list__item-primary-content");
+   primaryContent.append("i")  // Create avatar in primary content
+     .attr("class", "material-icons mdl-list__item-avatar")
+     .text("pin_drop");
+   primaryContent.append("span");  // Add the place's title
+   primaryContent.append("span")  // Add the place's text body
+     .attr("class", "mdl-list__item-text-body");
+   liEnter.append("span")  // Create secondary content
+     .attr("class", "mdl-list__item-secondary-content")
+     .append("label")
+       .attr("class", "mdl-switch mdl-js-switch mdl-js-ripple-effect")
+         .append("input")
+           .attr("type", "checkbox")
+           .attr("class", "mdl-switch__input");
+}
+
+
+/* Given an liMerge with data attached to it, this function will update
+ * the card */
+function updateCard(merge){
   // Update the data in the elements
-  primaryContent = liMerge.select(".mdl-list__item-primary-content");
+  primaryContent = merge.select(".mdl-list__item-primary-content");
   primaryContent.select("span").text(d => d[2]);  // Populate the title
   primaryContent.select(".mdl-list__item-text-body")  // Populate info
     .text(d => "" + rdp(getDistance(coords, d), 0) +
           'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 3) + ')');
-  liMerge.select(".mdl-list__item-secondary-content") // Secondary content
+  merge.select(".mdl-list__item-secondary-content") // Secondary content
     .select("label")  // Add label 'for'
       .attr("for", (d, i) => "switch-" + i)
       .select("input")
         .attr("id", (d, i) => "switch-" + i)
-        .attr("checked", (d) => d[3]);
-  listElements.exit().remove();
+        .property("checked", (d) => d[3])
+        .on("change", (d, i, n) => {
+          d[3] = n[i].checked;
+          savePlaces();
+          updatePointers();
+        });
 }
+
 
 /*
  * Change selected place to the argument. The argument should be a member of
@@ -166,15 +179,24 @@ function updatePointers() {
  */
 function updateSelectedPlace(newOne) {
   selectedPlace = newOne;
+  dataForD3 = selectedPlace ? [selectedPlace] : [];
   updatePointers(); // Because selected one changes size!
   var compass_svg_title = compass_svg_group.selectAll(".distance")
-    .data(selectedPlace ? [selectedPlace] : []);
+    .data(dataForD3);
   compass_svg_title.enter().append("svg:text")
     .attr("text-anchor", "middle")
     .attr("class", "distance")
     .merge(compass_svg_title)
-    .text(d => "" + Math.round(getDistance(coords, d)), "m");
+    .text(d => "" + rdp(getDistance(coords, d), 0) + "m");
   compass_svg_title.exit().remove();
+
+  selectedCard = d3.select(".chart.page").selectAll("ul")
+    .data(dataForD3);
+  liEnter = selectedCard.enter().append("ul")
+    .attr("class", "mdl-list selected-place-card");
+  createCard(liEnter);
+  updateCard(liEnter.merge(selectedCard));
+  selectedCard.exit().remove();
 }
 
 
