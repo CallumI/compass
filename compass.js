@@ -113,7 +113,7 @@ function updatePointers() {
 
 
   // Now setup the table
-  var listElements = d3.select(".data-table").selectAll("li")
+  var listElements = d3.select(".data-table").selectAll(".media")
     .data(places);
   // Create the new elements
   liEnter = listElements.enter();
@@ -127,24 +127,22 @@ function updatePointers() {
 /* Given an enter with data attached to it, this function will create the
  * card */
 function createCard(enter){
-   liEnter = enter.append("li")  // Create list element
-     .attr("class", "mdl-list__item mdl-list__item--three-line");
-     //.text(d => JSON.stringify(d));
-   primaryContent = liEnter.append("span")  // Create span for pimary content
-     .attr("class", "mdl-list__item-primary-content");
-   primaryContent.append("i")  // Create avatar in primary content
-     .attr("class", "material-icons mdl-list__item-avatar")
-     .text("pin_drop");
-   primaryContent.append("span");  // Add the place's title
-   primaryContent.append("span")  // Add the place's text body
-     .attr("class", "mdl-list__item-text-body");
-   liEnter.append("span")  // Create secondary content
-     .attr("class", "mdl-list__item-secondary-content")
-     .append("label")
-       .attr("class", "mdl-switch mdl-js-switch mdl-js-ripple-effect")
-         .append("input")
-           .attr("type", "checkbox")
-           .attr("class", "mdl-switch__input");
+  liEnter = enter.append("div")  // Create list element
+   .attr("class", "media");
+  liEnter.append("div")
+    .attr("class", "make-middle media-left")
+      .append("i")  // Create avatar in primary content
+        .attr("class", "material-icons media-object")
+        .text("pin_drop");
+  primaryContent = liEnter.append("div")  // Create container for pimary content
+    .attr("class", "media-body");
+  primaryContent.append("h4");  // Add the place's title
+  primaryContent.append("span");   // Span to put the body text in
+  liEnter.append("div")  // Create secondary content
+   .attr("class", "media-right make-middle")
+     .append("input")
+       .attr("type", "checkbox")
+       .attr("class", "");
 }
 
 
@@ -152,22 +150,21 @@ function createCard(enter){
  * the card */
 function updateCard(merge){
   // Update the data in the elements
-  primaryContent = merge.select(".mdl-list__item-primary-content");
-  primaryContent.select("span").text(d => d[2]);  // Populate the title
-  primaryContent.select(".mdl-list__item-text-body")  // Populate info
+  primaryContent = merge.select(".media-body");
+  primaryContent.select("span")
     .text(d => "" + rdp(getDistance(coords, d), 0) +
-          'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 3) + ')');
-  merge.select(".mdl-list__item-secondary-content") // Secondary content
-    .select("label")  // Add label 'for'
-      .attr("for", (d, i) => "switch-" + i)
-      .select("input")
-        .attr("id", (d, i) => "switch-" + i)
-        .property("checked", (d) => d[3])
-        .on("change", (d, i, n) => {
-          d[3] = n[i].checked;
-          savePlaces();
-          updatePointers();
-        });
+          'm | (' + rdp(d[0], 2) + ', '+ rdp(d[1], 3) + ')'); // Populate info
+  primaryContent.select("h4")
+    .text(d => d[2]);  // Populate the title
+  merge.select(".media-right") // Secondary content
+    .select("input")
+      .attr("id", (d, i) => "switch-" + i)
+      .property("checked", (d) => d[3])
+      .on("change", (d, i, n) => {
+        d[3] = n[i].checked;
+        savePlaces();
+        updatePointers();
+      });
 }
 
 

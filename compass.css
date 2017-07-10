@@ -5,13 +5,16 @@ body {
   font-family: 'Roboto', serif;
 }
 
+.data {
+  background-color: white;
+}
 
-.data-table{
+.data-table {
   max-height: 100%;
   overflow-y: scroll;
 }
 
-.selected-place-card{
+.selected-place-card {
   background-color: white;
   width: 100%;
   position: absolute;
@@ -21,23 +24,39 @@ body {
   margin: 0;
 }
 
+.media-left.make-middle {
+  vertical-align: middle;
+}
+
+.media-right.make-middle {
+  vertical-align: middle;
+  padding-right: 10px;
+}
+
+
 /* The containing chart */
+
 .chart {
   background-color: #9E9E9E;
 }
 
+
 /* The distance in the middle of the compass */
+
 .distance {
   font-size: x-large;
 }
 
+
 /* The main button in the corner of each page */
-.main-button.mdl-button {
+
+.main-button {
   position: absolute;
   bottom: 15px;
   right: 15px;
   z-index: 999;
 }
+
 
 /* PAGE ANIMATION */
 
@@ -62,19 +81,19 @@ body {
 
 .page-move-in {
   animation: in .3s ease both;
-
 }
+
+
 /*
  * Animation to slide in from the right hand side of the page.
  */
+
 @keyframes in {
   from {
-    margin-top: 0%;
+    margin-top: 0;
     transform: translateX(-100%);
   }
 }
-
-
 
 
 /* GOOGLE FONT SUPPORT - SELF HOSTED */
@@ -83,19 +102,17 @@ body {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(fonts/MaterialIcons-Regular.eot); /* For IE6-8 */
-  src: local('Material Icons'),
-    local('MaterialIcons-Regular'),
-    url(fonts/MaterialIcons-Regular.woff2) format('woff2'),
-    url(fonts/MaterialIcons-Regular.woff) format('woff'),
-    url(fonts/MaterialIcons-Regular.ttf) format('truetype');
+  src: url(fonts/MaterialIcons-Regular.eot);
+  /* For IE6-8 */
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(fonts/MaterialIcons-Regular.woff2) format('woff2'), url(fonts/MaterialIcons-Regular.woff) format('woff'), url(fonts/MaterialIcons-Regular.ttf) format('truetype');
 }
 
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px;
+  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -103,15 +120,12 @@ body {
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
-
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
   /* Support for Safari and Chrome. */
   text-rendering: optimizeLegibility;
-
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
-
   /* Support for IE. */
   font-feature-settings: 'liga';
 }

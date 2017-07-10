@@ -7,22 +7,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <link rel="stylesheet" type="text/css" href="compass.css" />
   <script src="d3/d3.v4.min.js"></script>
-  <link rel="stylesheet" href="mdl/material.pink-cyan.min.css">
-  <script src="mdl/material.min.js"></script>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <script src="bootstrap/js/jquery.min.js"></script>
+  <script src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 
 <body>
   <div class="page-container">
-    <div class="chart page page-displayed page-ontop page-move-in">
+    <div class="chart page">
 
-      <button class="main-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+      <button type="button" class="btn btn-default main-button">
         <i class="material-icons">list</i>
       </button>
     </div>
-    <div class="data page">
-      <ul class="mdl-list data-table">
-      </ul>
-      <button class="main-button mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <div class="data page page-displayed page-ontop page-move-in">
+      <div class="data-table">
+      </div>
+      <button type="button" class="btn btn-default main-button">
         <i class="material-icons">navigation</i>
       </button>
     </div>
