@@ -164,6 +164,9 @@ function updateCard(merge){
         d[3] = n[i].checked;
         savePlaces();
         updatePointers();
+        if(!n[i].checked && selectedPlace == d){
+          updateSelectedPlace(null);
+        }
       });
 }
 
