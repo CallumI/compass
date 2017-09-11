@@ -8,7 +8,7 @@ Works best with with:
 3. Location services (GPS etc)
 4. A `javascript:` URL hack to input new places... (place input view is TODO).
 
-[Hosted by github here](https://callumi.github.io/compass/compass.html)
+[Hosted by github here](https://cal-id.github.io/compass/compass.html)
 
 ## Sources
 
